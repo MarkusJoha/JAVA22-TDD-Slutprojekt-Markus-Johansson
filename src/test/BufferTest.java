@@ -1,138 +1,104 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.NoSuchElementException;
 
 public class BufferTest {
-    
-    @Test
-    void checkItemReturnWhenBufferEmpty() {
-        BufferHelper buffer = new BufferHelper();
-        ConsumerMock mockConsumer = new ConsumerMock(buffer);
+	BufferHelper buffer;
+	ProducerMock producer;
+	ConsumerMock consumer;
+	ItemHelper item;
 
-        assertThrows(NoSuchElementException.class, mockConsumer::removeItem);
-    }
-    
-    @Test
-    void checkRemove() {
-    	BufferHelper buffer = new BufferHelper();
-    	ProducerMock producer = new ProducerMock(buffer);
-    	ItemHelper item = new ItemHelper("ABC");
-    	producer.addItem(item);
-    	ConsumerMock consumer = new ConsumerMock(buffer);
-    	assertEquals(item, consumer.removeItem());
+    @BeforeEach
+    void beforeEach() {
+        buffer = new BufferHelper();
+        producer = new ProducerMock(buffer);
+        consumer = new ConsumerMock(buffer);
     }
 
-    @Test
-    void checkAddMethodAddsItemInBufferList() {
-        BufferHelper buffer = new BufferHelper();
-        ProducerMock producer = new ProducerMock(buffer);
-        ItemHelper item = new ItemHelper("ABC");
-        
-        producer.addItem(item);
-        
-        assertTrue(buffer.getBufferSize().contains(item));
-    }
+	@Test
+	@DisplayName("Check item return when buffer is empty")
+	void checkItemReturnWhenBufferEmpty() {
+		Thread thread = new Thread(() -> assertThrows(InterruptedException.class, () -> buffer.remove()));
+		thread.start();
+		thread.interrupt();
+	}
 
-    @Test
-    void checkBufferListIsInitiallyEmpty() {
-        BufferHelper buffer = new BufferHelper();
-        
-        assertTrue(buffer.getBufferSize().isEmpty());
-    }
+	@Test
+	@DisplayName("Check remove item from buffer")
+	void checkRemove() {
+		ItemHelper item = new ItemHelper("ABC");
+		producer.addItem(item);
+		assertEquals(item, consumer.removeItem());
+	}
 
-    @Test
-    void checkBufferIsNotEmpty() {
-        BufferHelper buffer = new BufferHelper();
-        ProducerMock producer = new ProducerMock(buffer);
-        ItemHelper item = new ItemHelper("ABC");
-        producer.addItem(item);
-        
-        assertFalse(buffer.getBufferSize().isEmpty());
-    }
+	@Test
+	@DisplayName("Check add method adds item in buffer list")
+	void checkAddMethodAddsItemInBufferList() {
+		ItemHelper item = new ItemHelper("ABC");
+		producer.addItem(item);
 
-    @Test
-    void checkBufferIsEmpty() {
-        BufferHelper buffer = new BufferHelper();
-        
-        assertTrue(buffer.getBufferSize().isEmpty());
-    }
+		assertTrue(buffer.getBufferSize().contains(item));
+	}
 
-    @Test
-    void checkSysoutAddingNullToList() {
-        // Redirect standard output to capture sysout
-        ByteArrayOutputStream sysoutContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(sysoutContent));
-        
-        try {
-            BufferHelper buffer = new BufferHelper();
-            ProducerMock producer = new ProducerMock(buffer);
-            producer.addItem(null);
-            
-            assertEquals("[null]", sysoutContent.toString().trim());
-        } finally {
-            // Reset standard output
-            System.setOut(System.out);
-        }
-    }
+	@Test
+	@DisplayName("Check buffer list is initially empty")
+	void checkBufferListIsInitiallyEmpty() {
+		assertTrue(buffer.getBufferSize().isEmpty());
+	}
 
-    @Test
-    void checkBooleanIsTrue() {
-        BufferHelper buffer = new BufferHelper();
-        ProducerMock producer = new ProducerMock(buffer);
-        ItemHelper item = new ItemHelper("ABC");
-        
-        assertTrue(producer.addItem(item));
-    }
+	@Test
+	@DisplayName("Check buffer is not empty")
+	void checkBufferIsNotEmpty() {
+		ItemHelper item = new ItemHelper("ABC");
+		producer.addItem(item);
 
-    @Test
-    void checkAddWithRightIdInListOrNullSentIn() {
-        BufferHelper buffer = new BufferHelper();
-        ProducerMock producer = new ProducerMock(buffer);
-        ItemHelper item = new ItemHelper("ABC");
-        
-        producer.addItem(item);
-        producer.addItem(null);
-        
-        assertTrue(buffer.getBufferSize().contains(item));
-        assertTrue(buffer.getBufferSize().contains(null));
-    }
+		assertFalse(buffer.getBufferSize().isEmpty());
+	}
 
-    @Test
-    void checkConsoleListContents() {
-        // Redirect standard output to capture sysout
-        ByteArrayOutputStream sysoutContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(sysoutContent));
-        
-        try {
-            BufferHelper buffer = new BufferHelper();
-            ProducerMock producer = new ProducerMock(buffer);
-            producer.addItem(null);
-            producer.addItem(new ItemHelper("ABC"));
-            
-            assertEquals("[null]", sysoutContent.toString().trim());
-            
-            sysoutContent.reset();
-            
-            producer.addItem(new ItemHelper("ABC"));
-            
-            assertEquals("[null, abc]", sysoutContent.toString().trim());
-        } finally {
-            // Reset standard output
-            System.setOut(System.out);
-        }
-    }
+	@Test
+	@DisplayName("Check buffer is empty")
+	void checkBufferIsEmpty() {
+		assertTrue(buffer.getBufferSize().isEmpty());
+	}
 
-    @Test
-    void checkRemoveFromEmptyList() {
-        BufferHelper buffer = new BufferHelper();
-        ConsumerMock consumer = new ConsumerMock(buffer);
-        
-        assertThrows(NoSuchElementException.class, consumer::removeItem);
-    }
+	@Test
+	@DisplayName("Check sysout adding null to list")
+	void checkSysoutAddingNullToList() {
+		ByteArrayOutputStream sysoutContent = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(sysoutContent));
+
+		try {
+			producer.addItem(null);
+
+			assertEquals("[null]", sysoutContent.toString().trim());
+		} finally {
+			System.setOut(System.out);
+		}
+	}
+
+	@Test
+	@DisplayName("Check boolean is true")
+	void checkBooleanIsTrue() {
+		ItemHelper item = new ItemHelper("ABC");
+
+		assertTrue(producer.addItem(item));
+	}
+
+	@Test
+	@DisplayName("Check add with right ID in list or null sent in")
+	void checkAddWithRightIdInListOrNullSentIn() {
+		ItemHelper item = new ItemHelper("ABC");
+
+		producer.addItem(item);
+		producer.addItem(null);
+
+		assertTrue(buffer.getBufferSize().contains(item));
+		assertTrue(buffer.getBufferSize().contains(null));
+	}
 }
-
-

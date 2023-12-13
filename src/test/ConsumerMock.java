@@ -14,15 +14,9 @@ public class ConsumerMock implements Consumer {
     @Override
     public void run() {
     }
-    
     public Item removeItem() {
         return buffer.remove();
-    
-
     }
-
-
-
     @Override
     public void stopRunning() {
     }
