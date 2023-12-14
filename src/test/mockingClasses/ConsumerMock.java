@@ -1,13 +1,13 @@
-package test;
+package test.mockingClasses;
 
 import main.Consumer;
 import main.Item;
 
 public class ConsumerMock implements Consumer {
 
-    private final BufferHelper buffer;
+    private final BufferMock buffer;
 
-    public ConsumerMock(BufferHelper buffer) {
+    public ConsumerMock(BufferMock buffer) {
         this.buffer = buffer;
     }
 

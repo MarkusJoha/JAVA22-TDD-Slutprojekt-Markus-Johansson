@@ -1,14 +1,14 @@
-package test;
+package test.mockingClasses;
 
 import java.util.Queue;
 
 import main.Buffer;
 import main.Item;
 
-public class BufferHelper extends Buffer {
+public class BufferMock extends Buffer {
 	
 
-    public BufferHelper() {
+    public BufferMock() {
 		super();
 	}
 

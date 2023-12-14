@@ -5,18 +5,24 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import test.mockingClasses.BufferMock;
+import test.mockingClasses.ConsumerMock;
+import test.mockingClasses.ItemMock;
+import test.mockingClasses.ProducerMock;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class BufferTest {
-	BufferHelper buffer;
+	BufferMock buffer;
 	ProducerMock producer;
 	ConsumerMock consumer;
-	ItemHelper item;
+	ItemMock item;
 
     @BeforeEach
     void beforeEach() {
-        buffer = new BufferHelper();
+        buffer = new BufferMock();
         producer = new ProducerMock(buffer);
         consumer = new ConsumerMock(buffer);
     }
@@ -32,7 +38,7 @@ public class BufferTest {
 	@Test
 	@DisplayName("Check remove item from buffer")
 	void checkRemove() {
-		ItemHelper item = new ItemHelper("ABC");
+		ItemMock item = new ItemMock("ABC");
 		producer.addItem(item);
 		assertEquals(item, consumer.removeItem());
 	}
@@ -40,7 +46,7 @@ public class BufferTest {
 	@Test
 	@DisplayName("Check add method adds item in buffer list")
 	void checkAddMethodAddsItemInBufferList() {
-		ItemHelper item = new ItemHelper("ABC");
+		ItemMock item = new ItemMock("ABC");
 		producer.addItem(item);
 
 		assertTrue(buffer.getBufferSize().contains(item));
@@ -55,7 +61,7 @@ public class BufferTest {
 	@Test
 	@DisplayName("Check buffer is not empty")
 	void checkBufferIsNotEmpty() {
-		ItemHelper item = new ItemHelper("ABC");
+		ItemMock item = new ItemMock("ABC");
 		producer.addItem(item);
 
 		assertFalse(buffer.getBufferSize().isEmpty());
@@ -85,7 +91,7 @@ public class BufferTest {
 	@Test
 	@DisplayName("Check boolean is true")
 	void checkBooleanIsTrue() {
-		ItemHelper item = new ItemHelper("ABC");
+		ItemMock item = new ItemMock("ABC");
 
 		assertTrue(producer.addItem(item));
 	}
@@ -93,7 +99,7 @@ public class BufferTest {
 	@Test
 	@DisplayName("Check add with right ID in list or null sent in")
 	void checkAddWithRightIdInListOrNullSentIn() {
-		ItemHelper item = new ItemHelper("ABC");
+		ItemMock item = new ItemMock("ABC");
 
 		producer.addItem(item);
 		producer.addItem(null);

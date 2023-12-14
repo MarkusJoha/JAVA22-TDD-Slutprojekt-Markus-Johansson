@@ -1,13 +1,13 @@
-package test;
+package test.mockingClasses;
 
 import main.Item;
 import main.Producer;
 
 public class ProducerMock implements Producer {
 
-    private final BufferHelper buffer;
+    private final BufferMock buffer;
 
-    public ProducerMock(BufferHelper buffer) {
+    public ProducerMock(BufferMock buffer) {
         this.buffer = buffer;
     }
 

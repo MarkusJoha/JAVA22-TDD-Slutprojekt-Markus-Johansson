@@ -6,13 +6,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import test.mockingClasses.ItemMock;
+
 public class ItemTest {
 
-	ItemHelper item;
+	ItemMock item;
 
 	@BeforeEach
 	void beforeEach() {
-		item = new ItemHelper("item");
+		item = new ItemMock("item");
 	}
 
 	@Test
@@ -41,7 +43,7 @@ public class ItemTest {
 	@DisplayName("test if item id isn't uppercase")
 	void itemConstructorUpperCase() {
 		String id = "ITEM";
-		ItemHelper item = new ItemHelper(id);
+		ItemMock item = new ItemMock(id);
 		assertEquals(id.toLowerCase(), item.getId());
 	}
 
@@ -49,7 +51,7 @@ public class ItemTest {
 	@DisplayName("test if item id is empty string")
 	void itemConstructorEmptyString() {
 		String id = "";
-		ItemHelper item = new ItemHelper(id);
+		ItemMock item = new ItemMock(id);
 		assertTrue(item.getId().isBlank());
 	}
 
@@ -94,7 +96,7 @@ public class ItemTest {
 	@Test
 	@DisplayName("test if constructor is null")
 	void constructorCheckNull() {
-		assertThrows(NullPointerException.class, () -> new ItemHelper(null));
+		assertThrows(NullPointerException.class, () -> new ItemMock(null));
 	}
 
 }
